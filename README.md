@@ -96,4 +96,13 @@ das Backend, liefert aber keine Earnings-/News-Daten bzw. verschickt keine Disco
 
 ## Lizenz
 
-MIT – siehe `LICENSE`. Nutzung auf eigenes Risiko, siehe Disclaimer oben.
+MIT – siehe `LICENSE`.
+
+## Zusätzlicher Haftungsausschluss
+
+Diese Software erzeugt ein regelbasiertes Scoring auf Basis frei zugänglicher
+Marktdaten (yfinance, Finnhub) und eines Open-Source-Sentiment-Modells
+(ProsusAI/finbert). Sie stellt keine Finanz-, Anlage- oder Rechtsberatung im
+Sinne einschlägiger Finanzregulierung (z. B. des deutschen KWG) dar. Es wird
+keine Gewähr für Richtigkeit, Vollständigkeit oder Eignung der Ausgaben für
+Investitionsentscheidungen übernommen. Nutzung auf eigenes Risiko.

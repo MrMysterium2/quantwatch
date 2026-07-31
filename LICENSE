@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-Additional note: This software generates rule-based scoring output derived from
-publicly available market data (yfinance, Finnhub) and an open-source sentiment
-model (ProsusAI/finbert). It does not constitute financial, investment, or legal
-advice within the meaning of applicable financial regulation (e.g. German KWG).
-No warranty is made regarding the accuracy, completeness, or suitability of any
-output for investment decisions. Use at your own risk.
