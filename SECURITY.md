@@ -34,6 +34,16 @@ Please include in your report:
 - `FINNHUB_API_KEY` and `DISCORD_WEBHOOK_URL` are optional; without them, the
   corresponding features simply return empty results instead of an error.
 
+## Known Unresolved Vulnerabilities
+
+- **PyTorch `torch.jit.script` memory corruption** (GHSA, local attack vector,
+  CVSS 1.9/10 Low): Dependabot could not generate a compatible update to the
+  fixing version (2.13.0) due to dependency resolution conflicts with the
+  CPU-only wheel index. Given the low severity, local-only attack vector, and
+  this deployment being bound to 127.0.0.1 with no untrusted local users, the
+  residual risk is accepted for now. Will be revisited once a compatible
+  wheel/update path becomes available.
+
 ## Not a Recommendation Tool
 
 Security reports here refer strictly to technical aspects (auth, injection,
