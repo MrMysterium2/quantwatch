@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glossar - QuantWatch</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>📖 Glossar</h1>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Ticker &amp; ISIN</h2>
+      <p><strong>Ticker</strong> ist das Börsenkürzel einer Aktie, z. B. <code>AAPL</code> (Apple) oder <code>SAP.DE</code> (SAP an der Frankfurter Börse/Xetra). Das Tool arbeitet primär mit Tickern.</p>
+      <p><strong>ISIN</strong> (International Securities Identification Number) ist eine 12-stellige, weltweit eindeutige Kennung einer Aktie, z. B. <code>US0378331005</code> für Apple. TradeRepublic zeigt meist die ISIN an, nicht den Ticker. Das Tool kann manche ISINs über yfinance auflösen, garantiert ist das aber nicht - wo möglich, lieber den Ticker eintragen.</p>
+    </section>
+
+    <section class="card">
+      <h2>KGV (Kurs-Gewinn-Verhältnis)</h2>
+      <p>Verhältnis von aktuellem Aktienkurs zum Gewinn pro Aktie der letzten 12 Monate. Zeigt, wie viele Jahresgewinne du aktuell für die Aktie "bezahlst". Ein niedrigeres KGV gilt klassisch als "günstiger bewertet" - allein aussagekräftig ist das aber nur im Vergleich zur Branche, da z. B. Wachstumsbranchen (Tech) strukturell höhere KGVs haben als reife Branchen (Konsumgüter).</p>
+      <p><strong>Forward-KGV</strong> ist dasselbe, nur basierend auf den für die Zukunft <em>erwarteten</em> Gewinnen statt der vergangenen. Ist das Forward-KGV niedriger als das normale (Trailing-)KGV, erwartet der Markt Gewinnwachstum.</p>
+    </section>
+
+    <section class="card">
+      <h2>RSI (Relative Strength Index)</h2>
+      <p>Momentum-Indikator zwischen 0 und 100, der misst, wie stark eine Aktie in letzter Zeit gestiegen oder gefallen ist.</p>
+      <ul>
+        <li><strong>RSI &gt; 70</strong>: gilt als "überkauft" - der Kurs ist stark gestiegen, ein Rücksetzer wird wahrscheinlicher.</li>
+        <li><strong>RSI &lt; 30</strong>: gilt als "überverkauft" - der Kurs ist stark gefallen, eine Erholung wird wahrscheinlicher.</li>
+        <li>Werte dazwischen gelten als neutral.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>SMA50 / SMA200 (gleitende Durchschnitte)</h2>
+      <p><strong>SMA</strong> = Simple Moving Average, der Durchschnittskurs der letzten 50 bzw. 200 Handelstage. Zeigt den mittelfristigen (SMA50) bzw. langfristigen (SMA200) Trend, geglättet um Tagesschwankungen.</p>
+      <p>Liegt der aktuelle Kurs über beiden SMAs und der SMA50 über dem SMA200 ("Golden Cross"-Lage), gilt das als klarer Aufwärtstrend. Umgekehrt ("Death Cross"-Lage) als Abwärtstrend.</p>
+    </section>
+
+    <section class="card">
+      <h2>Beta</h2>
+      <p>Misst, wie stark eine Aktie im Vergleich zum Gesamtmarkt schwankt. <strong>Beta = 1</strong> bedeutet: schwankt wie der Markt. <strong>Beta &gt; 1</strong>: schwankt stärker (z. B. 1,5 = 50 % heftiger). <strong>Beta &lt; 1</strong>: schwankt schwächer, gilt als defensiver.</p>
+    </section>
+
+    <section class="card">
+      <h2>Volatilität</h2>
+      <p>Die annualisierte Schwankungsbreite der Tagesrenditen einer Aktie, in Prozent. Höhere Volatilität = größere Kursausschläge in beide Richtungen = höheres Risiko, unabhängig davon, ob der Trend positiv oder negativ ist.</p>
+    </section>
+
+    <section class="card">
+      <h2>Risiko-Score</h2>
+      <p>Eine Zahl von 0-100, die das Tool aus Volatilität, Beta und Nähe zum nächsten Earnings-Termin berechnet. Höher = riskanter. Kein absoluter Maßstab, sondern nützlich zum Vergleich verschiedener Aktien auf deiner Watchlist.</p>
+    </section>
+
+    <section class="card">
+      <h2>Sentiment-Score</h2>
+      <p>Ein Wert von -1 (sehr negative Presse) bis +1 (sehr positive Presse), berechnet aus aktuellen News-Artikeln der letzten 7 Tage mittels <strong>FinBERT</strong> (ein auf Finanztexte trainiertes KI-Modell). Artikel von seriöseren Quellen (Reuters, Bloomberg) und aktuellere Artikel zählen stärker. Nur für US-Ticker verfügbar (Datenquelle deckt keine internationalen Börsen ab).</p>
+    </section>
+
+    <section class="card">
+      <h2>Erwartete Rendite &amp; Empfehlung</h2>
+      <p>Das Tool kombiniert Technik (Trend + RSI), Fundamentaldaten (KGV-Signal) und - wo verfügbar - Sentiment zu einem Gesamtscore zwischen -1 und +1. Daraus:</p>
+      <ul>
+        <li><strong>Score &gt; +0,35</strong> → Empfehlung "Kaufen"</li>
+        <li><strong>Score &lt; -0,35</strong> → Empfehlung "Verkaufen"</li>
+        <li>Dazwischen → "Halten"</li>
+      </ul>
+      <p>Die "erwartete Rendite" ist der Gesamtscore × 15 (bei maximalem Score also ±15 %) - ein aus dem Score abgeleiteter Richtwert, <strong>keine validierte Prognose</strong>.</p>
+    </section>
+
+    <section class="card">
+      <h2>Wie wird der Gesamtscore genau berechnet?</h2>
+      <p>Drei Einzelfaktoren, jeweils auf einer Skala von <strong>-1 (sehr negativ) bis +1 (sehr positiv)</strong>:</p>
+
+      <h3>1. Technischer Score</h3>
+      <pre>trend_component:
+  Kurs &gt; SMA50 &gt; SMA200  → +1,0   (klarer Aufwärtstrend)
+  Kurs &lt; SMA50 &lt; SMA200  → -1,0   (klarer Abwärtstrend)
+  Kurs &gt; SMA50 (gemischt) → +0,4
+  Kurs &lt; SMA50 (gemischt) → -0,4
+
+rsi_component:
+  RSI &lt; 30  → +0,5   (überverkauft)
+  RSI &gt; 70  → -0,5   (überkauft)
+  sonst     → (50 - RSI) / 40
+
+technical_score = 0,7 × trend_component + 0,3 × rsi_component</pre>
+
+      <h3>2. Fundamentaler Score</h3>
+      <pre>growth_signal = (Trailing-KGV - Forward-KGV) / Trailing-KGV
+fundamental_score = growth_signal / 0,5   (gedeckelt auf ±1)</pre>
+      <p>Niedrigeres Forward-KGV als Trailing-KGV → Markt erwartet Gewinnwachstum → positiver Wert.</p>
+
+      <h3>3. Sentiment-Score</h3>
+      <p>Gewichteter Durchschnitt der FinBERT-Bewertungen aller News-Artikel der letzten 7 Tage, gewichtet nach Quellenqualität (Reuters/Bloomberg zählen mehr) und Aktualität (neuere Artikel zählen mehr, Halbwertszeit 24 Stunden). Nur für US-Ticker verfügbar.</p>
+
+      <h3>4. Gewichtung zum Gesamtscore</h3>
+      <p>Wenn Sentiment verfügbar ist:</p>
+      <pre>total_score = 0,40 × technical_score
+            + 0,35 × fundamental_score
+            + 0,25 × sentiment_score</pre>
+      <p>Wenn nicht (z. B. internationale Ticker ohne Finnhub-Abdeckung), wird das Gewicht proportional umverteilt statt mit einem falschen Neutralwert zu rechnen:</p>
+      <pre>total_score = 0,55 × technical_score
+            + 0,45 × fundamental_score</pre>
+
+      <h3>5. Risiko-Score (separat, 0-100)</h3>
+      <pre>risk_score = Volatilität × 100
+           + |Beta - 1,0| × 15
+           + 10  (falls Earnings in ≤ 7 Tagen)</pre>
+
+      <h3>Rechenbeispiel</h3>
+      <p>AAPL mit technical_score = 0,611, fundamental_score = 0,281, sentiment_score = 0,103:</p>
+      <pre>total_score = 0,40×0,611 + 0,35×0,281 + 0,25×0,103
+            = 0,2444 + 0,09835 + 0,02575
+            = 0,3685
+
+→ über der Schwelle 0,35 → KAUFEN
+→ erwartete Rendite = 0,3685 × 15 = 5,5 %</pre>
+
+      <p class="hint">Wichtig: Die Gewichte (0,40/0,35/0,25 bzw. 0,55/0,45) und die Formeln sind regelbasiert festgelegt, nicht empirisch aus Backtests optimiert. Der Backtest-Button zeigt nach ein paar Wochen historisierter Daten, ob diese Gewichtung überhaupt trägt.</p>
+    </section>
+
+    <section class="card">
+      <h2>Earnings (Quartalszahlen)</h2>
+      <p>Der Termin, an dem ein Unternehmen seine Geschäftszahlen für das letzte Quartal veröffentlicht. Kurse schwanken um diesen Termin herum oft stärker, da neue Informationen den Markt überraschen können - deshalb fließt die Nähe zum Earnings-Termin in den Risiko-Score ein.</p>
+    </section>
+
+    <section class="card">
+      <h2>Backtest &amp; Trefferquote</h2>
+      <p>Der Backtest vergleicht vergangene Empfehlungen mit der tatsächlichen Kursentwicklung 14 Tage danach. Die <strong>Trefferquote</strong> zeigt, wie oft "Kaufen" tatsächlich zu einem steigenden bzw. "Verkaufen" zu einem fallenden Kurs geführt hat. Braucht einige Wochen historisierte Daten, um aussagekräftig zu sein.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a href="/">← Zurück zum Dashboard</a>
+  </footer>
+</body>
+</html>

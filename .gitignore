@@ -1,0 +1,26 @@
+# Secrets - niemals committen
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Datenbank / Volumes (falls lokal gemountet)
+*.sqlite3
+pgdata/
+
+# Alembic - lokale Migrations-Locks (falls vorhanden)
+*.pyc
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Model-Cache (FinBERT, ~2GB - gehört nicht ins Repo)
+**/huggingface/

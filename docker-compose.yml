@@ -1,0 +1,41 @@
+services:
+  aktien-db:
+    image: postgres:16-alpine
+    container_name: quantwatch-db
+    restart: "no"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - aktien-db-data:/var/lib/postgresql/data
+    networks:
+      - aktien-net
+    ports:
+      - "127.0.0.1:5433:5432"
+
+  aktien-backend:
+    build: ./backend
+    container_name: quantwatch-backend
+    restart: "no"
+    depends_on:
+      - aktien-db
+    env_file:
+      - .env
+    environment:
+      - HF_HUB_DISABLE_XET=1
+    volumes:
+      - ./backend/app:/app
+      - finbert-model-cache:/root/.cache/huggingface
+    networks:
+      - aktien-net
+    ports:
+      - "127.0.0.1:8095:8000"
+
+networks:
+  aktien-net:
+    driver: bridge
+
+volumes:
+  aktien-db-data:
+  finbert-model-cache:

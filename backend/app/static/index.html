@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantWatch</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <h1>📈 QuantWatch</h1>
+      <div class="login-tabs">
+        <button id="tab-login" class="tab-btn tab-active">Anmelden</button>
+        <button id="tab-register" class="tab-btn">Registrieren</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <input type="text" id="login-username" placeholder="Benutzername" required autocomplete="username" />
+        <input type="password" id="login-password" placeholder="Passwort" required autocomplete="current-password" />
+        <button type="submit" class="btn-primary">Anmelden</button>
+        <p id="login-error" class="error-text"></p>
+      </form>
+
+      <form id="register-form" class="auth-form hidden">
+        <input type="text" id="register-username" placeholder="Benutzername (min. 3 Zeichen)" required autocomplete="username" />
+        <input type="password" id="register-password" placeholder="Passwort (min. 12 Zeichen)" required minlength="12" autocomplete="new-password" />
+        <p class="hint">Mind. 12 Zeichen, mit Groß-/Kleinbuchstabe, Zahl und Sonderzeichen. Keine auf-/absteigenden Zahlenfolgen (z. B. 1234).</p>
+        <button type="submit" class="btn-primary">Konto erstellen</button>
+        <p id="register-error" class="error-text"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <h1>📈 QuantWatch</h1>
+      <div class="header-actions">
+        <span id="current-username" class="hint"></span>
+        <button id="scan-btn" class="btn-primary">Jetzt scannen</button>
+        <button id="logout-btn" class="btn-secondary">Abmelden</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="add-ticker-section" class="card">
+        <h2>Aktie zur Watchlist hinzufügen</h2>
+        <form id="add-form">
+          <input type="text" id="add-ticker" placeholder="Ticker, z. B. AAPL oder SAP.DE" required />
+          <input type="text" id="add-notes" placeholder="Notiz (optional)" />
+          <input type="number" id="add-purchase-price" placeholder="Kaufpreis (optional)" step="0.01" min="0" />
+          <input type="number" id="add-quantity" placeholder="Stückzahl (optional)" step="0.0001" min="0" />
+          <button type="submit" class="btn-primary">Hinzufügen</button>
+        </form>
+        <p id="add-error" class="error-text"></p>
+
+        <button id="toggle-bulk-add" type="button" class="btn-secondary" style="margin-top: 12px;">+ Mehrere Ticker auf einmal hinzufügen</button>
+        <div id="bulk-add-panel" class="hidden" style="margin-top: 12px;">
+          <textarea id="bulk-add-textarea" rows="4" placeholder="Ein Ticker pro Zeile oder durch Komma getrennt, z. B.:&#10;AAPL&#10;MSFT&#10;SAP.DE"></textarea>
+          <button id="bulk-add-btn" type="button" class="btn-primary" style="margin-top: 8px;">Alle hinzufügen</button>
+          <div id="bulk-add-result"></div>
+        </div>
+      </section>
+
+      <section id="watchlist-section" class="card">
+        <div class="watchlist-header">
+          <h2>Meine Watchlist</h2>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <select id="sort-select" class="sort-select">
+              <option value="name">Name (A-Z)</option>
+              <option value="recommendation">Kaufen → Verkaufen</option>
+              <option value="kgv">Bestes KGV (niedrigstes)</option>
+              <option value="rsi">Bestes RSI (überverkauft zuerst)</option>
+              <option value="sma">Bestes SMA (stärkster Aufwärtstrend)</option>
+              <option value="risk_high">Höchstes Risiko</option>
+              <option value="risk_low">Geringstes Risiko</option>
+              <option value="return_high">Höchste Rendite</option>
+              <option value="return_low">Geringste Rendite</option>
+            </select>
+            <button id="export-btn" class="btn-secondary">CSV-Export</button>
+          </div>
+        </div>
+        <input type="text" id="watchlist-search" placeholder="🔍 Suche nach Name oder Ticker/ISIN ..." style="width: 100%; margin-bottom: 10px;" />
+        <div id="sector-filter-container" class="sector-filter-container"></div>
+        <div id="watchlist-container">
+          <p class="hint">Lade Watchlist ...</p>
+        </div>
+      </section>
+
+      <section id="single-eval-section" class="card">
+        <h2>Einzelbewertung</h2>
+        <p class="hint">Bewertet einen beliebigen Ticker, ohne ihn zur Watchlist hinzuzufügen.</p>
+        <form id="eval-form">
+          <input type="text" id="eval-ticker" placeholder="Ticker, z. B. TSLA" required />
+          <button type="submit" class="btn-primary">Bewerten</button>
+        </form>
+        <div id="eval-result"></div>
+      </section>
+
+      <section id="backtest-section" class="card">
+        <h2>Backtest</h2>
+        <p class="hint">Vergleicht vergangene Empfehlungen mit der tatsächlichen Kursentwicklung danach (14-Tage-Fenster).</p>
+        <button id="backtest-btn" class="btn-secondary">Backtest anzeigen</button>
+        <div id="backtest-result"></div>
+      </section>
+
+      <section id="account-section" class="card">
+        <h2>Konto</h2>
+        <button id="show-delete-btn" class="btn-danger">Konto löschen</button>
+        <form id="delete-account-form" class="auth-form hidden" style="margin-top: 14px;">
+          <p class="hint">Das löscht deinen Account und deine gesamte Watchlist unwiderruflich. Zur Bestätigung Passwort eingeben:</p>
+          <input type="password" id="delete-password" placeholder="Aktuelles Passwort" required />
+          <button type="submit" class="btn-danger">Endgültig löschen</button>
+          <p id="delete-error" class="error-text"></p>
+        </form>
+      </section>
+    </main>
+
+    <div id="detail-modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="detail-modal-title">Details</h2>
+          <button id="detail-modal-close" class="btn-secondary">✕</button>
+        </div>
+        <div id="detail-modal-body" class="modal-body">
+          <p class="hint">Lade Details ...</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <a href="/glossar.html">📖 Glossar - Fachbegriffe erklärt</a>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
