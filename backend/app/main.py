@@ -277,7 +277,8 @@ def add_multiple_to_watchlist(
             symbol = snapshot.get("symbol")
             exchange = snapshot.get("exchange")
         except ValueError as exc:
-            results.append({"ticker": ticker, "status": "fehler", "detail": str(exc)})
+            logger.warning("Watchlist-Bulk-Add fuer '%s' fehlgeschlagen: %s", ticker, exc)
+            results.append({"ticker": ticker, "status": "fehler", "detail": "Ticker nicht gefunden oder ungueltig"})
             continue
 
         entry = Watchlist(
@@ -619,7 +620,7 @@ def scan_watchlist(db: Session = Depends(get_db)):
             result = generate_recommendation(entry.ticker, previous_recommendation=previous_recommendation)
         except Exception as exc:
             logger.warning("Scoring fuer %s fehlgeschlagen: %s", entry.ticker, exc)
-            results.append({"ticker": entry.ticker, "error": str(exc)})
+            results.append({"ticker": entry.ticker, "error": "Scoring fehlgeschlagen"})
             continue
 
         if entry.sector is None and result.get("sector"):
